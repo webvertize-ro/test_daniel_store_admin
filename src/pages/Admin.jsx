@@ -24,20 +24,20 @@ export default function Admin() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const entries = [
-    {
-      name: 'Ion Popescu',
-      email: 'ion@test.com',
-      message: 'Buna ziua!',
-      createdAt: '2026-02-26T08:27:38.886+00:00',
-    },
-    {
-      name: 'Vasile Ionescu',
-      email: 'vasile@test.com',
-      message: 'Buna seara!',
-      createdAt: '2026-02-26T08:27:54.590+00:00',
-    },
-  ];
+  // const entries = [
+  //   {
+  //     name: 'Ion Popescu',
+  //     email: 'ion@test.com',
+  //     message: 'Buna ziua!',
+  //     createdAt: '2026-02-26T08:27:38.886+00:00',
+  //   },
+  //   {
+  //     name: 'Vasile Ionescu',
+  //     email: 'vasile@test.com',
+  //     message: 'Buna seara!',
+  //     createdAt: '2026-02-26T08:27:54.590+00:00',
+  //   },
+  // ];
 
   // Fetching entries from the database with polling
   useEffect(() => {
