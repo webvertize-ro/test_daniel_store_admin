@@ -110,7 +110,9 @@ function Navigation() {
               </StyledLi> */}
             </ul>
             <div className="d-flex">
-              <LogoutButton>Deconectare</LogoutButton>
+              <LogoutButton onClick={() => handleLogout()}>
+                Deconectare
+              </LogoutButton>
             </div>
           </div>
         </div>
