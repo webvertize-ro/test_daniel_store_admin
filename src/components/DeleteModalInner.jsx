@@ -31,7 +31,7 @@ const StyledP = styled.p`
   text-align: center;
 `;
 
-function DeleteModalInner({ onCloseModal, id }) {
+function DeleteModalInner({ onCloseModal, id, onDelete }) {
   async function deleteEntry(id) {
     try {
       const res = await fetch('/api/deleteEntry', {
@@ -39,6 +39,10 @@ function DeleteModalInner({ onCloseModal, id }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
       });
+
+      if (res.ok) {
+        onDelete(id);
+      }
 
       if (res.status === 204) {
         console.log('the entry was indeed deleted');
