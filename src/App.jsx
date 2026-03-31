@@ -4,6 +4,8 @@ import Admin from './pages/Admin';
 import AppLayout from './components/AppLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,18 +17,25 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Toaster position="top-center" />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            {/* <Route path="/admin-website" element={<AdminWebsite />} /> */}
-            <Route path="/admin" element={<Admin />} />
-          </Route>
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <Toaster position="top-center" />
+        <BrowserRouter>
+          <Routes>
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="/admin" element={<Admin />} />
+            </Route>
+            <Route path="/" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }
 

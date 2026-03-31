@@ -1,7 +1,10 @@
 import React from 'react';
 import Logo from './Logo';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { logUserOut } from '../services/apiAuth';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 const NavContainer = styled.div`
   /* background-color: green; */
@@ -59,12 +62,21 @@ const LogoutButton = styled.button`
 `;
 
 function Navigation() {
-  const handleLogout = () => {
-    // Remove token from localStorage
-    localStorage.removeItem('token');
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-    // Redirect to login page
-    window.location.href = '/';
+  const { mutate: logout, isPending } = useMutation({
+    mutationFn: logUserOut,
+    onSuccess: () => {
+      queryClient.clear();
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Could not log out!');
+    },
+  });
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (

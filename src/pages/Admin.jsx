@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Navigation from '../components/Navigation';
 import Request from '../components/Request';
 import styled from 'styled-components';
+import { useAuth } from '../context/AuthContext';
 
 const StyledAdmin = styled.div`
   height: 100vh;
@@ -20,10 +21,12 @@ const StyledH2 = styled.h2`
 `;
 
 export default function Admin() {
+  const { user, websiteId, isAuthenticated, loading } = useAuth();
+
   return (
     <StyledAdmin>
       <Container className="container">
-        <p>Here will be the admin page!</p>
+        <p>Bun venit, {user.email}!</p>
       </Container>
     </StyledAdmin>
   );

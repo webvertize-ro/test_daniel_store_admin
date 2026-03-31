@@ -4,9 +4,16 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import loginBg from '../assets/login_background.jpg';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  QueryClient,
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { logUserIn } from '../services/apiAuth';
+import { useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const StyledLogin = styled.div`
   height: 100vh;
@@ -89,16 +96,19 @@ const StyledInput = styled.input`
 `;
 
 function Login() {
-  const { register, reset, handleSubmit } = useForm();
+  const { isAuthenticated, loading } = useAuth();
+
+  const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
-  const { mutate: login, isPending: loading } = useMutation({
-    mutationFn: logUserIn,
-    onSuccess: (data) => {
-      queryClient.setQueryData(['session'], data.user);
+  useEffect(() => {
+    if (isAuthenticated) {
       navigate('/admin');
-    },
+    }
+  }, [isAuthenticated, navigate]);
+
+  const { mutate: login, isPending } = useMutation({
+    mutationFn: logUserIn,
     onError: (error) => {
       toast.error(error.message || 'Invalid email or password');
     },
@@ -112,6 +122,7 @@ function Login() {
     <StyledLogin bgImg={loginBg}>
       <Text>
         <div className="mb-3">
+          <h2>test</h2>
           <Logo />
         </div>
         <StyledH2 className="mb-4">Admin Login</StyledH2>
@@ -138,7 +149,7 @@ function Login() {
           </div>
 
           <LoginButton type="submit">
-            {loading && <LoadingSpinner />}
+            {isPending && <LoadingSpinner />}
             Login
           </LoginButton>
         </StyledForm>

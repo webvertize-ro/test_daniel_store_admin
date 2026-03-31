@@ -10,3 +10,9 @@ export async function logUserIn({ email, password }) {
 
   return data;
 }
+
+export async function logUserOut() {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) throw new Error(error.message);
+}
