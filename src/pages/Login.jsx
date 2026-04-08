@@ -122,7 +122,6 @@ function Login() {
     <StyledLogin bgImg={loginBg}>
       <Text>
         <div className="mb-3">
-          <h2>test</h2>
           <Logo />
         </div>
         <StyledH2 className="mb-4">Admin Login</StyledH2>

@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { logUserOut } from '../services/apiAuth';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import Modal from './EditContentModal';
 
 const NavContainer = styled.div`
   /* background-color: green; */

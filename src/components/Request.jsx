@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Modal from './Modal';
+import Modal from './EditContentModal';
 import DeleteModalInner from './DeleteModalInner';
 
 const StyledRequest = styled.div`

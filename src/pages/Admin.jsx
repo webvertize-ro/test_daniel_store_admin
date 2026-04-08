@@ -1,33 +1,189 @@
-import { useEffect, useState } from 'react';
-import Navigation from '../components/Navigation';
-import Request from '../components/Request';
+// pages/Admin.jsx
+import { useState } from 'react';
+import { useContent } from '../hooks/useContent';
+import EditContentModal from '../components/EditContentModal';
+import LoadingSpinner from '../components/LoadingSpinner';
 import styled from 'styled-components';
-import { useAuth } from '../context/AuthContext';
+
+const SpinnerContainer = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const StyledAdmin = styled.div`
-  height: 100vh;
-  background-color: rgba(54, 85, 104, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
   color: #fff;
 `;
 
-const Container = styled.div`
-  padding: 1.25rem 0;
+const Tabs = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+
+  /* gap: 1rem; */
+  /* justify-content: space-between; */
+`;
+
+const IndividualTab = styled.div`
+  border: 1px solid white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => (props.selected ? '#fff' : 'transparent')};
+  color: ${(props) => (props.selected ? '#000' : '#fff')};
+
+  &:hover {
+    cursor: pointer;
+    background-color: #fff;
+    color: #000;
+  }
+`;
+
+const Page = styled.div`
+  padding: 2rem;
+`;
+
+const SectionsContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const StyledH2 = styled.h2`
-  margin-bottom: 1.5rem;
+const Section = styled.div``;
+
+const SectionTitle = styled.div`
+  margin-left: 2rem;
+  margin-bottom: 0.5rem;
 `;
 
-export default function Admin() {
-  const { user, websiteId, isAuthenticated, loading } = useAuth();
+const FieldsContainer = styled.div`
+  margin-left: 4rem;
+  border: 1px solid #fff;
+`;
+
+const Field = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem;
+  border-bottom: 1px solid #e5e7eb;
+`;
+
+const FieldContent = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const EditButton = styled.button`
+  border: none;
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+`;
+
+const Label = styled.div`
+  font-weight: bold;
+  display: flex;
+`;
+
+const Content = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 300;
+  line-break: anywhere;
+  padding: 0.5rem;
+  max-width: 100%;
+  overflow-wrap: break-word;
+`;
+
+function Admin() {
+  const { grouped, isLoading } = useContent();
+  const [selectedPage, setSelectedPage] = useState('global');
+
+  const [editingField, setEditingField] = useState(null);
+
+  if (isLoading) return <LoadingSpinner />;
+
+  const pages = Object.entries(grouped).map(([page]) => page);
 
   return (
-    <StyledAdmin>
-      <Container className="container">
-        <p>Bun venit, {user.email}!</p>
-      </Container>
+    <StyledAdmin className="container">
+      <h2>Administrare conținut</h2>
+
+      <div>
+        {/* Tabs */}
+        <Tabs>
+          {pages.map((p) => (
+            <>
+              <IndividualTab
+                onClick={() => setSelectedPage(p)}
+                selected={p === selectedPage}
+              >
+                {p}
+              </IndividualTab>
+            </>
+          ))}
+        </Tabs>
+        {/* Content */}
+        {Object.entries(grouped).map(([page, sections]) => {
+          if (page === selectedPage) {
+            return (
+              <div>
+                <Page key={page} className="mb-3">
+                  {/* level 2 - iterating over sections within each page */}
+                  <SectionsContainer>
+                    {Object.entries(sections).map(([section, fields]) => (
+                      <Section key={section} className="mb-2">
+                        <SectionTitle>
+                          Secțiunea: <strong>{section}</strong>
+                        </SectionTitle>
+                        {/* level 3 - iterating over individual fields within each section */}
+                        <FieldsContainer>
+                          {fields.map((field) => (
+                            <Field key={field.id}>
+                              <FieldContent>
+                                <Label>{field.label}: </Label>
+                                <Content>
+                                  {field.content_type === 'image_url'
+                                    ? '[ imagine ]'
+                                    : field.value}
+                                </Content>
+                              </FieldContent>
+                              <EditButton
+                                onClick={() => setEditingField(field)}
+                              >
+                                Editează
+                              </EditButton>
+                            </Field>
+                          ))}
+                        </FieldsContainer>
+                      </Section>
+                    ))}
+                  </SectionsContainer>
+                </Page>
+              </div>
+            );
+          }
+        })}
+      </div>
+
+      {/* level 1 - iterating over pages */}
+
+      {editingField && (
+        <EditContentModal
+          field={editingField}
+          onClose={() => setEditingField(null)}
+        />
+      )}
     </StyledAdmin>
   );
 }
+
+export default Admin;

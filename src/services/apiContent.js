@@ -1,5 +1,4 @@
 import supabase from './supabase';
-import { supabaseUrl } from './supabase';
 
 export async function getContent(websiteId) {
   const { data, error } = await supabase
@@ -25,23 +24,30 @@ export async function updateTextContent({ id, value }) {
 }
 
 export async function updateImageContent({ id, websiteId, key, file }) {
-  // 1. upload the file to Supabase Storage
   const filePath = `${websiteId}/${key}`;
+
+  // 1. delete the existing file first
+  await supabase.storage.from('website-assets').remove([filePath]);
+
+  // 2. upload the new file
   const { error: uploadError } = await supabase.storage
     .from('website-assets')
-    .upload(filePath, file, { upsert: true });
+    .upload(filePath, file);
 
   if (uploadError) throw new Error(uploadError.message);
 
-  // 2. get the public URL
+  // 3. get the public URL
   const { data: urlData } = supabase.storage
     .from('website-assets')
     .getPublicUrl(filePath);
 
-  // 3. update the content table with the new URL
+  // 4. add a cache-busting timestamp to force the browser to reload the image
+  const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
+  // 5. update the content table
   const { data, error } = await supabase
     .from('content')
-    .update({ value: urlData.publicUrl })
+    .update({ value: publicUrl })
     .eq('id', id)
     .select()
     .single();

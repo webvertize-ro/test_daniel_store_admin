@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../context/AuthContext';
 import { getContent } from '../services/apiContent';
-import useAuth from '../context/AuthContext ';
 
 export function useContent() {
   const { websiteId } = useAuth();
@@ -8,7 +8,7 @@ export function useContent() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['content', websiteId],
     queryFn: () => getContent(websiteId),
-    enabled: !!websiteId,
+    enabled: websiteId ? true : false,
   });
 
   // group by page then by section
