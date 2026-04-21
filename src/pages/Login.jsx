@@ -103,7 +103,7 @@ function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/admin');
+      navigate('/requests');
     }
   }, [isAuthenticated, navigate]);
 

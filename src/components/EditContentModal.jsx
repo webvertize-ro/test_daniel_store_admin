@@ -1,5 +1,5 @@
 // components/EditContentModal.jsx
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateTextContent, updateImageContent } from '../services/apiContent';
 import { useAuth } from '../context/AuthContext';
@@ -7,12 +7,7 @@ import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import { useOutsideClick } from '../hooks/useOutsideClick';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPaperclip,
-  faUpload,
-  faX,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
+import { faUpload, faX, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const Overlay = styled.div`
   position: fixed;
@@ -147,7 +142,7 @@ const SaveBtn = styled.button`
 function EditContentModal({ field, onClose }) {
   const { websiteId } = useAuth();
   const queryClient = useQueryClient();
-  const [textValue, setTextValue] = useState(field.value);
+  const [textValue, setTextValue] = useState(field?.value);
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -159,7 +154,7 @@ function EditContentModal({ field, onClose }) {
 
   const { mutate: saveContent, isPending } = useMutation({
     mutationFn: (variables) => {
-      if (field.content_type === 'image_url') {
+      if (field?.content_type === 'image_url') {
         return updateImageContent(variables);
       }
       return updateTextContent(variables);
@@ -176,11 +171,16 @@ function EditContentModal({ field, onClose }) {
   });
 
   function handleSave() {
-    if (field.content_type === 'image_url') {
+    if (field?.content_type === 'image_url') {
       if (!imageFile) return toast.error('Selectează o imagine');
-      saveContent({ id: field.id, websiteId, key: field.key, file: imageFile });
+      saveContent({
+        id: field?.id,
+        websiteId,
+        key: field?.key,
+        file: imageFile,
+      });
     } else {
-      saveContent({ id: field.id, value: textValue });
+      saveContent({ id: field?.id, value: textValue });
     }
   }
 
@@ -193,14 +193,14 @@ function EditContentModal({ field, onClose }) {
           <CloseBtn onClick={() => onClose()}>
             <FontAwesomeIcon icon={faX} />
           </CloseBtn>
-          <ModalTitle>{field.label}</ModalTitle>
+          <ModalTitle>{field?.label}</ModalTitle>
         </ModalTop>
         <StyledP>
           <strong>Conținutul editat: </strong>
-          {field.page} › {field.section}
+          {field?.page} › {field?.section}
         </StyledP>
 
-        {field.content_type === 'text' ? (
+        {field?.content_type === 'text' ? (
           <StyledTextarea
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}
@@ -213,8 +213,8 @@ function EditContentModal({ field, onClose }) {
                 <div className="text-dark">Imaginea actuala: </div>
 
                 <StyledImg
-                  src={field.value}
-                  alt={field.label}
+                  src={field?.value}
+                  alt={field?.label}
                   className="img-fluid"
                 />
               </CurrentImage>

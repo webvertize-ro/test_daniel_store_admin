@@ -107,20 +107,20 @@ function Navigation() {
                 <StyledNavLink
                   className="nav-link"
                   aria-current="page"
+                  to="/requests"
+                >
+                  Solicitări
+                </StyledNavLink>
+              </StyledLi>
+              <StyledLi StyledLiclassName="nav-item">
+                <StyledNavLink
+                  className="nav-link"
+                  aria-current="page"
                   to="/admin"
                 >
                   Administrare Conținut
                 </StyledNavLink>
               </StyledLi>
-              {/* <StyledLi className="nav-item">
-                <StyledNavLink
-                  className="nav-link"
-                  aria-current="page"
-                  to="/admin-website"
-                >
-                  Administrare conținut
-                </StyledNavLink>
-              </StyledLi> */}
             </ul>
             <div className="d-flex">
               <LogoutButton onClick={() => handleLogout()}>

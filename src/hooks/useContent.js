@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import { getContent } from '../services/apiContent';
 
+// this component uses the function "getContent" from "apiContent" in a "useQuery"
+
 export function useContent() {
   const { websiteId } = useAuth();
 

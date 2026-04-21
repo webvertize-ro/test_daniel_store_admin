@@ -144,7 +144,7 @@ function Admin() {
   }
 
   const [editingField, setEditingField] = useState(null);
-
+  console.log('editingField: ', editingField);
   if (isLoading) return <LoadingSpinner />;
 
   const pages = Object.entries(grouped).map(([page]) => page);
@@ -153,7 +153,6 @@ function Admin() {
     <StyledAdmin className="">
       <div>
         {/* Tabs */}
-
         <Tabs isScrolled={isScrolled}>
           {pages.map((p) => (
             <>
@@ -172,6 +171,7 @@ function Admin() {
             if (page === selectedPage) {
               return (
                 <div>
+                  {/* level 1 - iterating over pages */}
                   <Page key={page} className="mb-3">
                     {/* level 2 - iterating over sections within each page */}
                     <SectionsContainer>
@@ -210,8 +210,6 @@ function Admin() {
           })}
         </ContentContainer>
       </div>
-
-      {/* level 1 - iterating over pages */}
 
       {editingField && (
         <EditContentModal

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import supabase from '../services/supabase';
-
+// The goal of this component is to make user and website_id everywhere in the app with the hook useAuth
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
